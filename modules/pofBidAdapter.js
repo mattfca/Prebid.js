@@ -7,13 +7,12 @@ import { STATUS } from 'src/constants';
 import adaptermanager from 'src/adaptermanager';
 
 const PofBidAdapter = function PofBidAdapter() {
+    
     const baseAdapter = Adapter.createNew('pof');
 
-}
+    const BASE_URI = '//localhost:3030/ads';
 
-function pofBidAdapter() {
-
-    const BASE_URI = '//localhost:3030/ads'
+    const bidIds = [];
 
     baseAdapter.callBids = function (params) {
         const data = {
@@ -28,7 +27,8 @@ function pofBidAdapter() {
         for (let i = 0; i < bids.length; i++) {
             var bid = bids[i];
             
-            
+            bidIds.push(bid.bidId);
+            data.placements.push(bid);
         }
 
         ajax(BASE_URI, _responseCallback, JSON.stringify(data), { 
@@ -49,7 +49,7 @@ function pofBidAdapter() {
     // Export the `callBids` function, so that Prebid.js can execute
     // this function when the page asks to send out bid requests.
     return {
-        callBids: _callBids
+        callBids: baseAdapter.callBids
     };
 
 };
